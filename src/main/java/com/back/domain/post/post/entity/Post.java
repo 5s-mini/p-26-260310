@@ -1,17 +1,19 @@
 package com.back.domain.post.post.entity;
 
 import com.back.domain.post.comment.entity.Comment;
+import com.back.domain.post.post.dto.PostDto;
 import com.back.global.entity.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -60,5 +62,14 @@ public class Post extends BaseEntity {
         comments.remove(comment);
     }
 
-    // 댓글 수정
+    // dto 변환 메서드
+    public static PostDto toDto(Post post) {
+        return new PostDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getCreateDate(),
+                post.getModifyDate()
+        );
+    }
 }
