@@ -1,6 +1,7 @@
 package com.back.domain.post.post.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -66,10 +67,14 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("detail"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.createDate").exists())
-                .andExpect(jsonPath("$.modifyDate").exists())
                 .andExpect(jsonPath("$.title").value("제목1"))
                 .andExpect(jsonPath("$.content").value("내용1"));
+
+        Post post = postRepository.findById(targetId).get();
+
+        resultActions
+                .andExpect(jsonPath("$.createDate").value(matchesPattern(post.getCreateDate().toString().replaceAll("0+$", "") + ".*")))
+                .andExpect(jsonPath("$.modifyDate").value(matchesPattern(post.getModifyDate().toString().replaceAll("0+$", "") + ".*")));
 
 //        Post post = postRepository.findById(targetId).get();
 //        resultActions
