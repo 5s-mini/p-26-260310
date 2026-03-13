@@ -45,6 +45,7 @@ public class ApiV1CommentController {
         return new CommentDto(comment);
     }
 
+
     record CommentWriteReqBody(
             @NotBlank(message = "02-content-내용은 필수입니다.")
             @Size(min = 2, max = 100, message = "04-content-내용은 2자 이상 100자 이하로 입력해주세요.")
@@ -92,6 +93,27 @@ public class ApiV1CommentController {
                 "%d번 댓글이 삭제되었습니다.".formatted(commentId),
                 "200-1",
                 new CommentDto(comment)
+        );
+    }
+
+    record CommentModifyReqBody(
+            String content
+    ){}
+
+    @PutMapping("/{commentId}")
+    @Transactional
+    public RsData<Void> modify(
+            @PathVariable int postId,
+            @PathVariable int commentId,
+            @RequestBody CommentModifyReqBody reqBody
+    ) {
+
+        Post post = postService.findById(postId).get();
+        post.modifyComment(commentId, reqBody.content);
+
+        return new RsData<>(
+                "%d번 댓글이 수정되었습니다.".formatted(1),
+                "200-1"
         );
     }
 }

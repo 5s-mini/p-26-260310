@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -117,37 +118,37 @@ public class ApiV1CommentControllerTest {
                 .andExpect(jsonPath("$.data.commentDto.content").value(content));
     }
 
-//    @Test
-//    @DisplayName("댓글 수정 - 1번 글의 1번 댓글 수정")
-//    void t4() throws Exception {
-//        int targetPostId = 1;
-//        int targetCommentId = 1;
-//        String content = "댓글 내용 수정";
-//
-//        ResultActions resultActions = mvc
-//                .perform(
-//                        put("/api/v1/posts/%d/comments/%d".formatted(targetPostId, targetCommentId))
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .content("""
-//                                        {
-//                                            "content": "%s"
-//                                        }
-//                                        """.formatted(content))
-//                )
-//                .andDo(print());
-//
-//        resultActions
-//                .andExpect(handler().handlerType(ApiV1CommentController.class))
-//                .andExpect(handler().methodName("modifyItem"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.resultCode").value("200-1"))
-//                .andExpect(jsonPath("$.msg").value("%d번 댓글이 수정되었습니다.".formatted(targetCommentId)));
-//
-//        Post post = postRepository.findById(targetPostId).get();
-//        Comment comment = post.findCommentById(targetCommentId).get();
-//
-//        assertThat(comment.getContent()).isEqualTo(content);
-//    }
+    @Test
+    @DisplayName("댓글 수정 - 1번 글의 1번 댓글 수정")
+    void t4() throws Exception {
+        int targetPostId = 1;
+        int targetCommentId = 1;
+        String content = "댓글 내용 수정";
+
+        ResultActions resultActions = mvc
+                .perform(
+                        put("/api/v1/posts/%d/comments/%d".formatted(targetPostId, targetCommentId))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                        {
+                                            "content": "%s"
+                                        }
+                                        """.formatted(content))
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1CommentController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 댓글이 수정되었습니다.".formatted(targetCommentId)));
+
+        Post post = postRepository.findById(targetPostId).get();
+        Comment comment = post.findCommentById(targetCommentId).get();
+
+        assertThat(comment.getContent()).isEqualTo(content);
+    }
 
     @Test
     @DisplayName("댓글 삭제 - 1번 글의 1번 댓글 삭제")
